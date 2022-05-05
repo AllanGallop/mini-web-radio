@@ -38,6 +38,8 @@ The MWR has built-in browser based configuration which allows you to define the 
 7. Enter configuration Details and select `Save`
 8. The MWR will automatically restart into radio mode and begin playback
 
+![Config](_github/images/config_screenshot.jpg)
+
 ## Firmware
 
 Code for both the Arduino IDE and Plaform.io are included under the firmare directory
