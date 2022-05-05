@@ -22,6 +22,22 @@ Originally designed as a charity project, the MWR is a simple single-station bat
 
 </br>
 
+## Configuration
+
+The MWR has built-in browser based configuration which allows you to define the Hostname, Wireless network credentials and the playback URL.
+
+> Enable Configuration mode
+
+1. Switch Off MWR
+2. Open Faceplate 
+3. Install jumper (2.54mm) or short pins 13 and 15
+4. Turn On MWR
+5. Connect to `MWR-WIFI-SETUP` network
+6. Remove Jumper
+6. Navigate browser to `192.168.1.1`
+7. Enter configuration Details and select `Save`
+8. The MWR will automatically restart into radio mode and begin playback
+
 ## Firmware
 
 Code for both the Arduino IDE and Plaform.io are included under the firmare directory
