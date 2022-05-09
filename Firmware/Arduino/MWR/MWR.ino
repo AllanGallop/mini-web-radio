@@ -23,11 +23,11 @@ MWRadio mRadio;
 // Initialise Battery Task
 TaskHandle_t ChckBatTsk;
 
-int mode = 1;   // Mode State
+int mode = 0;   // Mode State
 
 void setup() {
   // Start Serial for debugging
-  Serial.begin(115200,SERIAL_8N1, 16, 17);
+  Serial.begin(115200);
   pinMode(LED_BATT,OUTPUT);
   pinMode(LED_WIFI,OUTPUT);
 

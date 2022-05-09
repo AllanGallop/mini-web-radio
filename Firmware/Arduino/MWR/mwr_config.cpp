@@ -27,21 +27,20 @@ IPAddress subnet(255,255,255,0);
 AsyncWebServer server(80);
 
 MWConfig::MWConfig()
-{
-
-}
+{}
 
 int MWConfig::detectMode(int source, int sink)
 {
   pinMode(source,OUTPUT);
   pinMode(sink,INPUT_PULLUP);
+  delay(1);
   digitalWrite(source,LOW);
   delay(1);
   int mode = digitalRead(sink);
   Serial.println(mode);
   delay(1);
   digitalWrite(source,LOW);
-  if(mode){ Serial.println("Configuration Jumper Detected"); }
+  if(!mode){ Serial.println("Configuration Jumper Detected"); }
   return mode;
 }
 
@@ -105,9 +104,14 @@ void MWConfig::stMode()
   WiFi.disconnect();
   WiFi.mode(WIFI_STA);
   WiFi.setHostname(host.c_str());
-  WiFi.begin(ssid.c_str(), pass.c_str());
-  Serial.print("Connecting to:");
+  Serial.print("Connecting to: ");
   Serial.println(ssid);
+  if(pass == NULL| pass.isEmpty()){
+    Serial.println("with no password");
+    WiFi.begin(ssid.c_str());
+  }else{
+    WiFi.begin(ssid.c_str(), pass.c_str());
+  }
 }
 
 String MWConfig::readUrlFromFile()

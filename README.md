@@ -38,7 +38,7 @@ The MWR has built-in browser based configuration which allows you to define the 
 7. Enter configuration Details and select `Save`
 8. The MWR will automatically restart into radio mode and begin playback
 
-![Config](_github/images/config_screenshot.jpg)
+<img src="_github/images/config_screenshot.jpg" height="400" width="200">
 
 ## Firmware
 
