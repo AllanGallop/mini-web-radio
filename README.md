@@ -48,6 +48,8 @@ Code for both the Arduino IDE and Plaform.io are included under the firmare dire
 
 ### Arduino IDE
 
+> A more detailed guide for installing and setting up the Arduino IDE can be found on the [Wiki](https://github.com/AllanGallop/mini-web-radio/wiki/Arduino-IDE-(from-Scratch))
+
 1. Download and install the following libaries:
 
     * [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
