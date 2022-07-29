@@ -1,4 +1,7 @@
 # Mini Web Radio
+
+> Builders Guide now available on [Instructables](https://www.instructables.com/Mini-Web-Radio-ESP32/) !
+
 Originally designed as a charity project, the MWR is a simple single-station battery powered internet radio. The design features a combined power-volume dial and 3.5mm headphone socket, utilising a 3D printed case and is based around:
 
 * WeMos Lolin32 Lite (ESP32)
@@ -14,11 +17,14 @@ Originally designed as a charity project, the MWR is a simple single-station bat
   
 ## Documents
 
+* [Build Guide](https://www.instructables.com/Mini-Web-Radio-ESP32/)
+
 * [User Guide](Documentation/MWR_User_Guide.pdf)
 
 * [Technical Guide](Documentation/MWR_Technical_Guide.pdf)
 
 * [Bill Of Materials](Documentation/BOM.pdf)
+
 
 </br>
 
