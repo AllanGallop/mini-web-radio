@@ -85,5 +85,5 @@ Files for 3D printing the shell, face and dial are provided in the [CAD](CAD) di
 
 ## Schematic
 
-![Schematic Preview](_github/images/schematic_preview.PNG)
+![Schematic Preview](_github/images/schematic_v2.webp)
 

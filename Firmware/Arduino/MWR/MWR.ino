@@ -1,20 +1,27 @@
+/**
+ * Mini-Web Radio V1.3
+ * ======================
+ * Created by Allan Gallop
+ * For Milton Keynes Hospital Radio
+ */
+
 #include <Arduino.h>
 #include <SPIFFS.h>
 #include "mwr_radio.h";
 #include "mwr_config.h";
 
 // Pin Definitions
-#define I2S_DOUT 26
-#define I2S_BCLK 25
-#define I2S_LRC  33
-#define I2S_GAIN 27
-#define I2S_SD 14
+#define I2S_DOUT 27
+#define I2S_BCLK 26
+#define I2S_LRC  25
+#define I2S_GAIN 14
+#define I2S_SD 12
 #define LED_BATT 5
 #define LED_WIFI 18
 #define VOL 34
-#define BATT 12
 #define MODE_0 13
 #define MODE_1 15
+int VBATT = 33;
 
 // Initalise Libaries
 MWConfig mConfig;
@@ -38,7 +45,7 @@ void setup() {
   Serial.println("SPIFFS mounted successfully");
 
   // Create Battery Task
-  xTaskCreatePinnedToCore(CheckBattery,"ChckBatTsk",10000,NULL,0,&ChckBatTsk,0);
+  xTaskCreatePinnedToCore(CheckBattery,"ChckBatTsk",10000,(void*)&VBATT,0,&ChckBatTsk,NULL);
 
   // Detect operating mode
   mode = mConfig.detectMode(MODE_0,MODE_1);
@@ -61,8 +68,16 @@ void setup() {
 
 void loop() {
   if(mode){
-   mRadio.setVolume(getVolume());
-   mRadio.play();   
+    /** 
+     *  V1 Hardware only
+     *  ----------------------
+     *  As battery is on mechanical switch we treat minimum volume
+     *  as effectly a "charge only" mode
+     */
+    if(getVolume() >1){
+     mRadio.setVolume(getVolume());
+     mRadio.play();
+    }
   }
 }
 
@@ -73,11 +88,11 @@ int getVolume()
 }
 
 // Check Battery Level
-void CheckBattery( void * parameter) {
+void CheckBattery( void * _VBATT) {
   float voltage = 0;
   int timer = 200;
   for(;;) {
-    if(timer >= 200){ voltage = ((float)analogRead(35) / 4095) * 3.3 * 2 * 1.035; timer = 0; }
+    if(timer >= 200){ voltage = ((float)analogRead(*((int*)_VBATT)) / 4095) * 3.3 * 2 * 1.035; timer = 0; }
       if(voltage > 4) {
         digitalWrite(LED_BATT,HIGH); delay(100); digitalWrite(LED_BATT,LOW); delay(100);
         digitalWrite(LED_BATT,HIGH); delay(300); digitalWrite(LED_BATT,LOW); delay(100);
@@ -89,7 +104,14 @@ void CheckBattery( void * parameter) {
           if(voltage > 3.5){              // Lower End
             flashLED(LED_BATT,500);
           }else{                   
-            flashLED(LED_BATT,150);       // Low or Anonomly
+            flashLED(LED_BATT,150);       // Low
+            if(voltage <= 3.1){
+              flashLED(LED_BATT,50);      // Danger
+              Serial.println("Battery low, going to sleep");
+              delay(1000);
+              Serial.flush(); 
+              esp_deep_sleep_start();
+            }
           }
         }
       }
