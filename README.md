@@ -1,3 +1,6 @@
+> Hardware assembly instructions available via [Instructables](https://www.instructables.com/Mini-Web-Radio-ESP32)
+
+
 # Mini Web Radio
 Originally designed as a charity project, the MWR is a simple single-station battery powered internet radio. The design features a combined power-volume dial and 3.5mm headphone socket, utilising a 3D printed case and is based around:
 
