@@ -2,7 +2,7 @@
 #include "Audio.h"
 #include "mwr_radio.h"
 
- Audio audio;
+Audio audio;
 
 void MWRadio::init(int DOUT, int BLCK, int LRC, int GAIN, int SDP)
 {

@@ -31,11 +31,18 @@ MWConfig::MWConfig()
 
 int MWConfig::detectMode(int source, int sink)
 {
+  /**
+   * v1.0 hardware only
+   * --------------------
+   * We use two pins to denote state via short
+   */
   pinMode(source,OUTPUT);
   pinMode(sink,INPUT_PULLUP);
   delay(1);
   digitalWrite(source,LOW);
   delay(1);
+
+  // Read mode
   int mode = digitalRead(sink);
   Serial.println(mode);
   delay(1);

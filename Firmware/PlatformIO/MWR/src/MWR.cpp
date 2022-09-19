@@ -89,7 +89,7 @@ int getVolume()
 
 // Check Battery Level
 void CheckBattery( void * _VBATT) {
-  float voltage = 0;
+  float voltage = ((float)analogRead(*((int*)_VBATT)) / 4095) * 3.3 * 2 * 1.035;
   int timer = 200;
   for(;;) {
     if(timer >= 200){ voltage = ((float)analogRead(*((int*)_VBATT)) / 4095) * 3.3 * 2 * 1.035; timer = 0; }

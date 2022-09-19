@@ -1,8 +1,9 @@
 # Mini Web Radio
+
 Originally designed as a charity project, the MWR is a simple single-station battery powered internet radio. The design features a combined power-volume dial and 3.5mm headphone socket, utilising a 3D printed case and is based around:
 
 * WeMos Lolin32 Lite (ESP32)
-* MAX98357A I2S Dac Amplifier
+* MAX98357A I2S DAC Amplifier
 * 18650 Lithium Battery
 
 
@@ -19,6 +20,12 @@ Originally designed as a charity project, the MWR is a simple single-station bat
 * [Technical Guide](Documentation/MWR_Technical_Guide.pdf)
 
 * [Bill Of Materials](Documentation/BOM.pdf)
+
+</br>
+
+## Construction
+
+> Hardware assembly instructions available via [Instructables](https://www.instructables.com/Mini-Web-Radio-ESP32)
 
 </br>
 
@@ -40,6 +47,10 @@ The MWR has built-in browser based configuration which allows you to define the 
 
 <img src="_github/images/config_screenshot.jpg" height="400" width="200">
 
+</br>
+
+> **Use SPIFF Files** </br> Alternatively you can enter configuration details directly into the configuration files (host, ssid, pass, url) located in the _data_ directory, this is preferred when mulitiple units require setup. 
+
 ## Firmware
 
 Code for both the Arduino IDE and Plaform.io are included under the firmare directory
@@ -47,6 +58,10 @@ Code for both the Arduino IDE and Plaform.io are included under the firmare dire
 </br>
 
 ### Arduino IDE
+
+> For Arduino 2.x & ESP32 2.x make sure to update line 65 of MWR.ino
+
+> **Build team**: please use Arduino IDE _1.8.16_ with ESP32 lib _1.0.6_
 
 1. Download and install the following libaries:
 
@@ -80,6 +95,14 @@ Files for 3D printing the shell, face and dial are provided in the [CAD](CAD) di
 * 0.2mm Layer Height
 * 5% Infill
 * 1.75mm PLA+ Filament
+
+</br>
+
+## Battery Initialisation
+
+> Applies only to v1.0 hardware using DW01A battery protection
+
+The protection module is tpyically set to "tripped" state from factory, requiring user to provide power first before the battery is usable. Connecting the USB cable while the volume dial is in the ON state will reset the module.
 
 </br>
 
