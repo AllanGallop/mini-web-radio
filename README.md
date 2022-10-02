@@ -62,7 +62,7 @@ Code for both the Arduino IDE and Plaform.io are included under the firmare dire
 
 ### Arduino IDE
 
-> For Arduino 2.x & ESP32 2.x make sure to update line 65 of MWR.ino
+> For Arduino 2.x & ESP32 2.x make sure to update line 65 of MWR.ino, EDIT: Don't use IDE 2.x, the ESPAsyncWebsever library has issues with it and lacks a SPIFFS upload tool
 
 > **Build team**: please use Arduino IDE _1.8.16_ with ESP32 lib _1.0.6_
 
