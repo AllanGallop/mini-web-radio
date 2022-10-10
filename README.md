@@ -70,6 +70,8 @@ Code for both the Arduino IDE and Plaform.io are included under the firmare dire
 
     * [ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
 
+        * [AsyncTCP](https://github.com/me-no-dev/AsyncTCP) (Required for ESPAsyncWebServer)
+
     * [ESP32-AudioI2S](https://github.com/schreibfaul1/ESP32-audioI2S)
 
 2. Download and install the following Tools:
