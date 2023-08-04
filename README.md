@@ -9,6 +9,8 @@ Originally designed as a charity project, the MWR is a simple single-station bat
 * MAX98357A I2S DAC Amplifier
 * 18650 Lithium Battery
 
+> This branch is specifically designed for units without a battery running off the USB connection for power. Checkout the main branch for the battery powered version
+
 
 </br>
 
@@ -38,7 +40,7 @@ The MWR has built-in browser based configuration which allows you to define the 
 
 > Enable Configuration mode
 
-1. Switch Off MWR
+1. Switch Off MWR (remove power)
 2. Open Faceplate 
 3. Install jumper (2.54mm) or short pins 13 and 15
 4. Turn On MWR
@@ -103,11 +105,11 @@ Files for 3D printing the shell, face and dial are provided in the [CAD](CAD) di
 
 </br>
 
-## Battery Initialisation
+## No battery modification
 
-> Applies only to v1.0 hardware using DW01A battery protection
+For those choosing to use no battery and operating the radio using USB power you will need to connect the switch side of the potentiometer to PIN 33 and the 3v pin (polarity does not matter) instead of building the power sensing section of the schematic (omit R1 and R2).
 
-The protection module is tpyically set to "tripped" state from factory, requiring user to provide power first before the battery is usable. Connecting the USB cable while the volume dial is in the ON state will reset the module.
+![No Battery Mod](_github/images/nobattery.png)
 
 </br>
 

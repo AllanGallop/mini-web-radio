@@ -1,5 +1,5 @@
 /**
- * Mini-Web Radio V1.3
+ * Mini-Web Radio V1.3 - No Battery
  * ======================
  * Created by Allan Gallop
  * For Milton Keynes Hospital Radio
@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <SPIFFS.h>
+#include "driver/rtc_io.h"
 #include "mwr_radio.h";
 #include "mwr_config.h";
 
@@ -16,27 +17,31 @@
 #define I2S_LRC  25
 #define I2S_GAIN 14
 #define I2S_SD 12
-#define LED_BATT 5
 #define LED_WIFI 18
 #define VOL 34
 #define MODE_0 13
 #define MODE_1 15
-int VBATT = 33;
+// if you change this make sure to use an RTC pin and change it on lines 41,43 too
+#define POWER_SW 33
 
 // Initalise Libaries
 MWConfig mConfig;
 MWRadio mRadio;
-
-// Initialise Battery Task
-TaskHandle_t ChckBatTsk;
 
 int mode = 0;   // Mode State
 
 void setup() {
   // Start Serial for debugging
   Serial.begin(115200);
-  pinMode(LED_BATT,OUTPUT);
+
+  // Setup LED pins
   pinMode(LED_WIFI,OUTPUT);
+
+  // Configure wakeup source for the power switch
+  // First we enable the rtc pulldown
+  rtc_gpio_pulldown_en(GPIO_NUM_33);
+  // then setup GPIO 34 as the wakeup source
+  esp_sleep_enable_ext0_wakeup(GPIO_NUM_33,1);
 
   // Start SPIFFS
   if (!SPIFFS.begin(true)) {
@@ -44,19 +49,20 @@ void setup() {
   }
   Serial.println("SPIFFS mounted successfully");
 
-  // Create Battery Task
-  xTaskCreatePinnedToCore(CheckBattery,"ChckBatTsk",10000,(void*)&VBATT,0,&ChckBatTsk,NULL);
-
   // Detect operating mode
   mode = mConfig.detectMode(MODE_0,MODE_1);
   if(!mode){   
     // Start into Config mode
     mConfig.apMode();
+    // Flash wifi led until connected
     while (WiFi.status() != WL_CONNECTED){flashLED(LED_WIFI,150);delay(500);}
   }else{      
     // Start into Radio mode
     mConfig.stMode();
+    // Flash wifi led until connected
     while (WiFi.status() != WL_CONNECTED){flashLED(LED_WIFI,150);delay(500);}
+    // For Arduino 2.x / ESP 2.x replace below line with:
+    // WiFi.onEvent(WiFiStationDisconnected, ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
     WiFi.onEvent(WiFiStationDisconnected, SYSTEM_EVENT_STA_DISCONNECTED);
     // Initalise Audio
     mRadio.init(I2S_DOUT, I2S_BCLK, I2S_LRC, I2S_GAIN, I2S_SD);
@@ -68,62 +74,41 @@ void setup() {
 
 void loop() {
   if(mode){
-    /** 
-     *  V1 Hardware only
-     *  ----------------------
-     *  As battery is on mechanical switch we treat minimum volume
-     *  as effectly a "charge only" mode
-     */
-    if(getVolume() >1){
-     mRadio.setVolume(getVolume());
-     mRadio.play();
-    }
+    powerSense();
+    mRadio.setVolume(getVolume());
+    mRadio.play();
   }
 }
 
-// Get volume state, mapped 1-20
+/**
+ *   getVolume
+ *   -------------------------
+ *   Returns int volume within range 1-20
+ */
 int getVolume()
 {
   return map(analogRead(VOL), 0, 4095, 1, 20);
 }
 
-// Check Battery Level
-void CheckBattery( void * _VBATT) {
-  float voltage = ((float)analogRead(*((int*)_VBATT)) / 4095) * 3.3 * 2 * 1.035;
-  int timer = 200;
-  for(;;) {
-    if(timer >= 200){ voltage = ((float)analogRead(*((int*)_VBATT)) / 4095) * 3.3 * 2 * 1.035; timer = 0; }
-      if(voltage > 4) {
-        digitalWrite(LED_BATT,HIGH); delay(100); digitalWrite(LED_BATT,LOW); delay(100);
-        digitalWrite(LED_BATT,HIGH); delay(300); digitalWrite(LED_BATT,LOW); delay(100);
-      }else{
-        if(voltage > 3.7){
-          digitalWrite(LED_BATT,HIGH);    // Normal Range
-          delay(1000);
-        }else{
-          if(voltage > 3.5){              // Lower End
-            flashLED(LED_BATT,500);
-          }else{                   
-            flashLED(LED_BATT,150);       // Low
-            if(voltage <= 3.1){
-              flashLED(LED_BATT,50);      // Danger
-              Serial.println("Battery low, going to sleep");
-              delay(1000);
-              Serial.flush(); 
-              esp_deep_sleep_start();
-            }
-          }
-        }
-      }
-    timer++;
-    Serial.print("Battery:");
-    Serial.println(voltage);
-    Serial.print("RSSI:");
-    Serial.println(WiFi.RSSI());
-  }
+/**
+ *  powerSense
+ *  --------------------------
+ *  Check the state of the power switch and put the ESP to sleep
+ *  if input is low (switch open)
+*/
+void powerSense()
+{
+   if(digitalRead(POWER_SW) === LOW)
+   {
+      esp_deep_sleep_start();
+   }
 }
 
-// Flash an LED
+/**
+ *  flashLED
+ *  -------------------------
+ *  Alternates LED state with delay
+ */
 void flashLED(int LED, int SPEED)
 {
   digitalWrite(LED,HIGH);
@@ -132,7 +117,11 @@ void flashLED(int LED, int SPEED)
   delay(SPEED);
 }
 
-
+/**
+ *  WifiStationDisconnected
+ *  -------------------------
+ *  Handles disconnection event, attempts to reconnect
+ */
 void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info){
   Serial.println("Disconnected from WiFi access point");
   Serial.print("WiFi lost connection. Reason: ");
