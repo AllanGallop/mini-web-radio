@@ -98,7 +98,7 @@ int getVolume()
 */
 void powerSense()
 {
-   if(digitalRead(POWER_SW) === LOW)
+   if(digitalRead(POWER_SW) == LOW)
    {
       esp_deep_sleep_start();
    }
