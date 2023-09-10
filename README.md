@@ -1,4 +1,4 @@
-> Hardware assembly instructions available via [Instructables](https://www.instructables.com/Mini-Web-Radio-ESP32)
+> [Version 2](https://github.com/AllanGallop/mini-web-radio-2) now Available!
 
 
 # Mini Web Radio
@@ -8,6 +8,8 @@ Originally designed as a charity project, the MWR is a simple single-station bat
 * WeMos Lolin32 Lite (ESP32)
 * MAX98357A I2S DAC Amplifier
 * 18650 Lithium Battery
+
+**This project has now largely been replaced by [Version 2](https://github.com/AllanGallop/mini-web-radio-2)** which introduces multiple channels, stereo audio and a single board design. However if you prefer to use off the shelf components then stick with Version 1!
 
 
 </br>
